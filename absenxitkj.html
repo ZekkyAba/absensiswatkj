@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Siswa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, #ff6600, #ff9900);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        header img {
+            width: 80px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+        header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        button {
+            background: #ff6600;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #e65c00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #ff6600;
+            color: white;
+            padding: 10px;
+        }
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logoneskar.png" alt="Logo Sekolah">
+    <h1>Absensi Siswa</h1>
+    <p id="tanggal"></p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h3>Form Absensi</h3>
+        <div class="form-group">
+            <label for="nama">Nama Siswa</label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap">
+        </div>
+        <div class="form-group">
+            <label for="kelas">Kelas</label>
+            <input type="text" id="kelas" placeholder="Masukkan kelas (contoh: 10 TKJ)">
+        </div>
+        <div class="form-group">
+            <label for="status">Status Kehadiran</label>
+            <select id="status">
+                <option value="Hadir">Hadir</option>
+                <option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option>
+                <option value="Alpa">Alpa</option>
+            </select>
+        </div>
+        <button onclick="tambahAbsensi()">Simpan Absensi</button>
+    </div>
+
+    <div class="card">
+        <h3>Data Absensi Hari Ini</h3>
+        <table id="tabelAbsensi">
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>Status</th>
+                <th>Waktu</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    let absensi = [];
+
+    // Tampilkan tanggal otomatis
+    document.getElementById("tanggal").textContent = new Date().toLocaleDateString('id-ID', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    function tambahAbsensi() {
+        let nama = document.getElementById("nama").value.trim();
+        let kelas = document.getElementById("kelas").value.trim();
+        let status = document.getElementById("status").value;
+
+        if (nama === "" || kelas === "") {
+            alert("Nama dan kelas harus diisi!");
+            return;
+        }
+
+        let waktu = new Date().toLocaleTimeString('id-ID');
+        absensi.push({ nama, kelas, status, waktu });
+
+        document.getElementById("nama").value = "";
+        document.getElementById("kelas").value = "";
+
+        renderTabel();
+    }
+
+    function renderTabel() {
+        let tabel = document.getElementById("tabelAbsensi");
+        tabel.innerHTML = `
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>Status</th>
+                <th>Waktu</th>
+            </tr>
+        `;
+
+        absensi.forEach((item, index) => {
+            let row = document.createElement("tr");
+            row.classList.add("fade-in");
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.nama}</td>
+                <td>${item.kelas}</td>
+                <td>${item.status}</td>
+                <td>${item.waktu}</td>
+            `;
+            tabel.appendChild(row);
+        });
+    }
+</script>
+
+</body>
+</html>
